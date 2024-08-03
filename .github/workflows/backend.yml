@@ -8,5 +8,5 @@ on:
 jobs:
   build:
     run-on: ubuntu-latest
-      steps:
-        -run: echo hellow world
+    steps:
+      - run: echo hellow world
