@@ -1,0 +1,13 @@
+
+on:
+  push:
+    branches:
+      main
+
+jobs:
+  dump-value:
+    name: dump-value
+    runs-on: ubuntu-latest
+    steps:
+      - name: echo github
+        run: echo '${{ toJSON(github) }}'
