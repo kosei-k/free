@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+name: backend
+>>>>>>> 2e3984445d0b7fb794645e9644627b642f17c23a
 
 on:
   push:
@@ -5,9 +9,16 @@ on:
       main
 
 jobs:
+<<<<<<< HEAD
   dump-value:
     name: dump-value
     runs-on: ubuntu-latest
     steps:
       - name: echo github
         run: echo '${{ toJSON(github) }}'
+=======
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo hellow world
+>>>>>>> 2e3984445d0b7fb794645e9644627b642f17c23a
