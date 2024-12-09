@@ -14,3 +14,6 @@ crash.log
 
 # Terraform plan files
 *.tfplan
+
+# Desktop Services Store
+.DS_Store
