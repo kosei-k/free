@@ -104,6 +104,46 @@ resource "aws_api_gateway_stage" "example" {
   }
 }
 
+# API GatewayがCloudWatchにログを書き込むためのIAMロールを作成
+resource "aws_iam_role" "api_gateway_cloudwatch_role" {
+  name = "api_gateway_cloudwatch_role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Action = "sts:AssumeRole"
+      Effect = "Allow"
+      Principal = {
+        Service = "apigateway.amazonaws.com"
+      }
+    }]
+  })
+}
+
+# IAMロールにCloudWatchログ書き込み権限を付与
+resource "aws_iam_role_policy_attachment" "api_gateway_cloudwatch_policy" {
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
+  role       = aws_iam_role.api_gateway_cloudwatch_role.name
+}
+
+# API Gatewayアカウント設定にCloudWatchロールを関連付け
+resource "aws_api_gateway_account" "example" {
+  cloudwatch_role_arn = aws_iam_role.api_gateway_cloudwatch_role.arn
+}
+
+# API Gatewayのメソッド設定（ログ記録の有効化）
+resource "aws_api_gateway_method_settings" "example" {
+  rest_api_id = aws_api_gateway_rest_api.example.id
+  stage_name  = aws_api_gateway_stage.example.stage_name
+  method_path = "*/*"
+
+  settings {
+    logging_level      = "INFO"  # ログレベルをINFOに設定
+    data_trace_enabled = true    # データトレースを有効化
+    metrics_enabled    = true    # メトリクスを有効化
+  }
+}
+
 # APIを実行するためのURLを表示
 output "api_gateway_invoke_url" {
   value = "${aws_api_gateway_stage.example.invoke_url}/example"
